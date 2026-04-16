@@ -74,7 +74,7 @@ bool narrator_create_game(const std::string& name,
     // Create character definition
     newgame_def ng;
     ng.name = name;
-    ng.type = GAME_TYPE_NORMAL;
+    ng.type = GAME_TYPE_NARRATIVE;  // Use our new game type
     ng.species = species;
     ng.job = job;
     ng.weapon = -1;

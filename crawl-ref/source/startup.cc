@@ -1089,6 +1089,14 @@ bool startup_step()
         crawl_state.last_type = GAME_TYPE_ARENA;
         run_arena(choice, defaults.arena_teams); // this is NORETURN
     }
+    
+    // Handle GAME_TYPE_NARRATIVE: skip menu, use provided character settings
+    // Choice should already have name/species/job set by narrator_control
+    if (choice.type == GAME_TYPE_NARRATIVE)
+    {
+        crawl_state.bypassed_startup_menu = true;
+        // choice already has ng_choice set, will proceed to setup_game below
+    }
 
     bool newchar = false;
     newgame_def ng;
@@ -1097,6 +1105,16 @@ bool startup_step()
 
     if (save_exists(choice.filename) && restore_game(choice.filename))
         save_player_name();
+    else if (choice.type == GAME_TYPE_NARRATIVE)
+    {
+        // For narrative games, use the choice directly (no need to go through choose_game menu)
+        ng = choice;
+        clear_message_store();
+        setup_game(ng);
+        newchar = true;
+        choice.seed = Options.seed;
+        write_newgame_options_file(choice);
+    }
     else if (choose_game(ng, choice, defaults)
              && restore_game(ng.filename))
     {
@@ -1117,7 +1135,6 @@ bool startup_step()
     _post_init(newchar);
 
     return newchar;
-}
 
 
 
