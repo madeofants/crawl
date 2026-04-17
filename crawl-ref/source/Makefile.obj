@@ -171,6 +171,7 @@ movement.o \
 mutation.o \
 nearby-danger.o \
 newgame.o \
+narrative_world.o \
 ng-init.o \
 ng-init-branches.o \
 ng-input.o \

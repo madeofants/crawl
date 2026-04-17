@@ -1116,6 +1116,8 @@ bool startup_step()
     {
         // For narrative games, set up a test character with defaults
         ng = choice;
+        if (ng.name.empty())
+            ng.name = "TestHero";
         ng.species = SP_HUMAN;
         ng.job = JOB_FIGHTER;
         clear_message_store();

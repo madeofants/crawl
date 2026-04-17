@@ -6,6 +6,7 @@
 #include "AppHdr.h"
 
 #include "dungeon.h"
+#include "narrative_world.h"
 
 #include <algorithm>
 #include <cmath>
@@ -274,6 +275,18 @@ int dgn_builder_y()
  *********************************************************************/
 bool builder(bool enable_random_maps)
 {
+    // Narrative mode: initialize env arrays (normally done inside
+    // _build_level_vetoable → dgn_reset_level, which we skip) then
+    // populate from our world data and return immediately.
+    if (crawl_state.game_is_narrative())
+    {
+        dgn_reset_level(enable_random_maps);
+        CubePlanet* world = get_narrative_world();
+        if (world)
+            world->populate_dcss_env(FACE_NORTH);
+        return true;
+    }
+
 #ifndef DEBUG_FULL_DUNGEON_SPAM
     // hide builder debug spam by default -- this is still collected by a tee
     // and accessible via &ctrl-l without this #define.

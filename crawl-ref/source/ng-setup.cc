@@ -16,6 +16,7 @@
 #include "jobs.h"
 #include "message.h"
 #include "mutation.h"
+#include "narrative_world.h"
 #include "ng-init.h"
 #include "ng-wanderer.h"
 #include "options.h"
@@ -494,6 +495,14 @@ static void _setup_innate_spells()
 
 void initial_dungeon_setup()
 {
+    if (crawl_state.game_is_narrative())
+    {
+        // Generate narrative world (ocean planet MVP)
+        narrative_world_generate();
+        return;
+    }
+
+    // DCSS dungeon setup
     rng::generator levelgen_rng(BRANCH_DUNGEON);
 
     initialise_branch_depths();
