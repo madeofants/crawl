@@ -229,7 +229,8 @@ static map<string, game_type> _game_modes()
         {"arena", GAME_TYPE_ARENA},
         {"sprint", GAME_TYPE_SPRINT},
         {"tutorial", GAME_TYPE_TUTORIAL},
-        {"hints", GAME_TYPE_HINTS}
+        {"hints", GAME_TYPE_HINTS},
+        {"narrative", GAME_TYPE_NARRATIVE}
     };
     if (Version::ReleaseType == VER_ALPHA)
         modes["descent"] = GAME_TYPE_DESCENT;
@@ -1268,6 +1269,8 @@ string gametype_to_str(game_type type)
         return "hints";
     case GAME_TYPE_DESCENT:
         return "descent";
+    case GAME_TYPE_NARRATIVE:
+        return "narrative";
     default:
         return "none";
     }

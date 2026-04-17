@@ -401,6 +401,7 @@ void setup_game(const newgame_def& ng,
     case GAME_TYPE_CUSTOM_SEED:
     case GAME_TYPE_TUTORIAL:
     case GAME_TYPE_SPRINT:
+    case GAME_TYPE_NARRATIVE:
         break;
     case GAME_TYPE_HINTS:
         init_hints();

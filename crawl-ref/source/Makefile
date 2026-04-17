@@ -2147,3 +2147,24 @@ util/fake_pty: util/fake_pty.c
 builddb: $(GAME)
 	./$(GAME) --builddb --reset-cache
 .PHONY: builddb
+
+#############################################################################
+# Test harness for fast iteration
+#############################################################################
+
+.PHONY: test test-quick
+
+test_harness.o: test_harness.cc .cflags $(GENERATED_HEADERS)
+	$(QUIET_CXX)$(CXX) $(STDFLAG) $(ALL_CFLAGS) $(INLINE_DEPGEN_CFLAGS) -c test_harness.cc -o test_harness.o
+
+test: $(OBJECTS) $(CONTRIB_LIBS) test_harness.o
+	@echo "    LINK test_harness"
+	$(QUIET_LINK)$(CXX) $(STDFLAG) $(ALL_CFLAGS) -o test_harness test_harness.o $(OBJECTS) $(ALL_LIBS)
+	@echo "Running test harness..."
+	./test_harness
+
+test-quick: test_harness.o $(OBJECTS) $(CONTRIB_LIBS)
+	@echo "    LINK test_harness (quick)"
+	$(QUIET_LINK)$(CXX) $(STDFLAG) $(ALL_CFLAGS) -o test_harness test_harness.o $(OBJECTS) $(ALL_LIBS)
+	@echo "Running test harness..."
+	./test_harness

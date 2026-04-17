@@ -38,6 +38,9 @@
 #include "mon-death.h"
 #include "mutation.h"
 #include "newgame.h"
+#include "newgame-def.h"
+#include "job-type.h"
+#include "species-type.h"
 #include "ng-input.h"
 #include "ng-setup.h"
 #include "notes.h"
@@ -430,6 +433,8 @@ static const vector<game_modes_menu_item> entries =
     {GAME_TYPE_HINTS, "Hints Mode for Dungeon Crawl",
         "A mostly normal game that provides more advanced hints "
         "than the tutorial."},
+    {GAME_TYPE_NARRATIVE, "Test World",
+        "Test world with a pre-generated character. For development." },
     {GAME_TYPE_DESCENT, "Dungeon Descent",
         "Mode with a branching, one-way path through the Dungeon." },
     {GAME_TYPE_SPRINT, "Dungeon Sprint",
@@ -743,6 +748,7 @@ private:
         case GAME_TYPE_TUTORIAL:
         case GAME_TYPE_SPRINT:
         case GAME_TYPE_HINTS:
+        case GAME_TYPE_NARRATIVE:
             // If a game type is chosen, the user expects to start a new game.
             // Just blanking the name it it clashes for now.
             if (_find_save(chars, input_string) != -1)
@@ -923,6 +929,7 @@ void UIStartupMenu::menu_item_activated(int id)
     case GAME_TYPE_TUTORIAL:
     case GAME_TYPE_SPRINT:
     case GAME_TYPE_HINTS:
+    case GAME_TYPE_NARRATIVE:
         trim_string(input_string);
         // XXX: is it ever not a good name?
         if (is_good_name(input_string, true))
@@ -1107,8 +1114,10 @@ bool startup_step()
         save_player_name();
     else if (choice.type == GAME_TYPE_NARRATIVE)
     {
-        // For narrative games, use the choice directly (no need to go through choose_game menu)
+        // For narrative games, set up a test character with defaults
         ng = choice;
+        ng.species = SP_HUMAN;
+        ng.job = JOB_FIGHTER;
         clear_message_store();
         setup_game(ng);
         newchar = true;
@@ -1135,6 +1144,7 @@ bool startup_step()
     _post_init(newchar);
 
     return newchar;
+}
 
 
 

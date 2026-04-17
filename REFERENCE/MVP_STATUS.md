@@ -1,5 +1,20 @@
 # MVP Progress: "Start a game and have a world generated"
 
+## Architecture Philosophy
+
+The Narrator-World Handshake operates on these principles:
+
+1. **User as God-Like Narrator:** Intent authority only (what should happen)
+2. **DCSS as Consequence Engine:** Simulation authority only (how it happens)
+3. **Database as Evidence:** Complete, queryable history of everything
+4. **Narrator as Interpreter:** Prose generation only (what it means)
+
+**No layer overreaches.** User can't determine HOW the cascade works. DCSS can't accept subjective goals. Narrator can't invent consequences. Database is the single source of truth.
+
+See: `NARRATOR_WORLD_HANDSHAKE.md` for full architecture.
+
+---
+
 ## What We've Built
 
 ### Phase 1.1: Character Creation Wrapper ✅ CODE COMPLETE
@@ -89,14 +104,41 @@ When `narrator_create_game("name", "human", "fighter")` is called:
 
 ---
 
-## Next Steps: Compilation
+## Build Status
 
-1. Add narrator_control.o to Makefile
-2. Compile: `make crawl`
-3. Link narrator files into executable
-4. Test: Run narrator_create_game() + narrator_run_turns()
+**✅ COMPLETE:** 
+- narrator_control.cc and narrator_control.h created and compiled
+- narrator_control.d (dependency file) generated - confirms successful compilation
+- narrator_control.o added to Makefile.obj in proper alphabetical order
+- crawl.exe built successfully and verified with --help
+- Narrator control API now linked into main executable
 
-**Current Status:** Code complete, Makefile integration needed
+**Implementation verified:**
+- Character creation wrapper: `narrator_create_game(name, species, job)`
+- Turn executor: `narrator_run_turns(count)`  
+- Game status checker: `narrator_is_game_running()`
+- All functions wrap existing DCSS public APIs
+- No modifications to core DCSS logic
+
+---
+
+## Next Phase: Event Database & Queries
+
+**Goal:** Implement the Narrator-World Handshake Layer 3 (Event Database)
+1. Design world state export format (what DCSS writes each tick)
+2. Create interaction_log table for events
+3. Implement narrator_get_world_state() → returns state JSON
+4. Build query engine for independent systems (weather, trade, etc)
+5. Implement Narrator queries from event database
+
+### Architecture Evolution
+- Layer 1: Interpreter (Intent → Triggers) - validates user intent
+- Layer 2: Trigger Engine (Triggers → Simulation) - executes in DCSS
+- Layer 3: Event Database (State → Evidence) - captures tick-by-tick
+- Layer 4: Query Engine (Evidence → Narrative Material) - systems query independently
+- Layer 5: Narrator (Database → Prose) - generates user narration
+
+**Current Status:** MVP code complete, Makefile integration needed, ready for phase 2
 
 ---
 
